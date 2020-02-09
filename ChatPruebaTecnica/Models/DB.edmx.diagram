@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="60ed4ca0ea8d43c1a399157ec7a084d4" Name="Diagram1">
         <EntityTypeShape EntityType="ChatPruebaTecnicaDBModel.State" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ChatPruebaTecnicaDBModel.User" Width="1.5" PointX="4" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ChatPruebaTecnicaDBModel.User" Width="1.5" PointX="4.375" PointY="0.625" />
         <AssociationConnector Association="ChatPruebaTecnicaDBModel.FK_User_State" />
       </Diagram>
     </edmx:Diagrams>

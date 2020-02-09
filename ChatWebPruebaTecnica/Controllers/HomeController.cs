@@ -3,36 +3,44 @@
     using System.Web.Mvc;
     using Business;
     using Models.Requests;
+    using Models.ViewModels;
+    using UtilitiesChatPruebaTecnica.Models;
     using UtilitiesChatPruebaTecnica.Tools;
 
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Register()
         {
+            RegisterViewModel model = new RegisterViewModel();
+            return View(model);
+        } 
+        
+        [HttpPost]
+        public ActionResult Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             User user = new User
             {
-                NickName = "Alex Acosta Web"
+                NickName = model.NickName
             };
 
             RequestUtil request = new RequestUtil();
 
-            request.Execute<User>(AppSettings.Url.REGISTER, "post", user);
+            Reply response = request.Execute<User>(AppSettings.Url.REGISTER, "post", user);
 
-            return View();
-        }
+            if (response.Result == 1)
+            {
+                Session["NickName"] = user.NickName;
+                return RedirectToAction("Index", "Lobby");
+            }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.error = response.Message;
 
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return View(model);
         }
     }
 }

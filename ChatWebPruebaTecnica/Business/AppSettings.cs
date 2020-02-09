@@ -9,6 +9,7 @@
         public class Url
         {
             public static string REGISTER => UrlApi + "api/User/";
+            public static string SignalR => UrlApi + "signalr/hubs";
         }
     }
 }

@@ -53,24 +53,24 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="ChatPruebaTecnicaDBModel.FK_User_State" FromRole="State" ToRole="User" />
         </EntityType>
-        <EntityType Name="User">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nickName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="date_created" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="idState" Type="Int32" />
-          <NavigationProperty Name="State" Relationship="ChatPruebaTecnicaDBModel.FK_User_State" FromRole="User" ToRole="State" />
-        </EntityType>
         <EntityContainer Name="ChatPruebaTecnicaDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="States" EntityType="Self.State" />
-          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Users" EntityType="ChatPruebaTecnicaDBModel.User" />
           <AssociationSet Name="FK_User_State" Association="ChatPruebaTecnicaDBModel.FK_User_State">
             <End Role="State" EntitySet="States" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nickName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_created" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="idState" Type="Int32" />
+          <NavigationProperty Name="State" Relationship="ChatPruebaTecnicaDBModel.FK_User_State" FromRole="User" ToRole="State" />
+        </EntityType>
         <Association Name="FK_User_State">
           <End Type="ChatPruebaTecnicaDBModel.State" Role="State" Multiplicity="0..1" />
           <End Type="ChatPruebaTecnicaDBModel.User" Role="User" Multiplicity="*" />
@@ -100,10 +100,10 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="ChatPruebaTecnicaDBModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="nickName" ColumnName="nickName" />
-                <ScalarProperty Name="date_created" ColumnName="date_created" />
                 <ScalarProperty Name="idState" ColumnName="idState" />
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="nickName" ColumnName="nickName" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

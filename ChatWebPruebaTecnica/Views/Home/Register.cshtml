@@ -1,0 +1,25 @@
+﻿@model ChatWebPruebaTecnica.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "Registro";
+    Layout = "~/Views/Shared/_LayoutRegister.cshtml";
+    string error = (string) ViewBag.error;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="text-danger">@error</div>
+        <form action="~/Home/Register" method="post">
+
+
+            @Html.LabelFor(d => d.NickName)
+            @Html.TextBoxFor(d => d.NickName, "", new {@class = "form-control"})
+            @Html.ValidationMessageFor(d => d.NickName, "", new {@class = "text-danger"})<br/>
+
+            <input type="submit" value="Guardar"/>
+        </form>
+
+    </div>
+</div>
+
