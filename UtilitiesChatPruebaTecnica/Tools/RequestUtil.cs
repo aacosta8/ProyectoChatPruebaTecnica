@@ -31,12 +31,15 @@
                 request.ContentType = " application/json;charset=utf-8";
                 request.Timeout = 60000;
 
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                if (objectRequest != null)
                 {
-                    streamWriter.Write(json);
-                    streamWriter.Flush();
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                    }
                 }
-
+                
                 var httpResponse = (HttpWebResponse)request.GetResponse();
                 using (var oStreamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {

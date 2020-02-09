@@ -12,21 +12,17 @@ namespace ChatPruebaTecnica.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class User
+    public partial class Message
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public User()
-        {
-            this.Messages = new HashSet<Message>();
-        }
-    
         public int id { get; set; }
-        public string nickName { get; set; }
+        public int idRoom { get; set; }
+        public int idUser { get; set; }
+        public string text { get; set; }
+        public int idState { get; set; }
         public System.DateTime date_created { get; set; }
-        public Nullable<int> idState { get; set; }
     
+        public virtual Room Room { get; set; }
         public virtual State State { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Message> Messages { get; set; }
+        public virtual User User { get; set; }
     }
 }

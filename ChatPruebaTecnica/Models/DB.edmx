@@ -5,6 +5,27 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ChatPruebaTecnicaDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idRoom" Type="int" Nullable="false" />
+          <Property Name="idUser" Type="int" Nullable="false" />
+          <Property Name="text" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="idState" Type="int" Nullable="false" />
+          <Property Name="date_created" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="idState" Type="int" Nullable="false" />
+          <Property Name="date_created" Type="datetime" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="State">
           <Key>
             <PropertyRef Name="id" />
@@ -21,6 +42,54 @@
           <Property Name="date_created" Type="date" Nullable="false" />
           <Property Name="idState" Type="int" />
         </EntityType>
+        <Association Name="FK_Message_Room">
+          <End Role="Room" Type="Self.Room" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idRoom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_State">
+          <End Role="State" Type="Self.State" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Message" Type="Self.Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idUser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Room_State">
+          <End Role="State" Type="Self.State" Multiplicity="1" />
+          <End Role="Room" Type="Self.Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Room">
+              <PropertyRef Name="idState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_State">
           <End Role="State" Type="Self.State" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -34,8 +103,26 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="ChatPruebaTecnicaDBModelStoreContainer">
+          <EntitySet Name="Message" EntityType="Self.Message" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Message_Room" Association="Self.FK_Message_Room">
+            <End Role="Room" EntitySet="Room" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_State" Association="Self.FK_Message_State">
+            <End Role="State" EntitySet="State" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_User" Association="Self.FK_Message_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Message" EntitySet="Message" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Room_State" Association="Self.FK_Room_State">
+            <End Role="State" EntitySet="State" />
+            <End Role="Room" EntitySet="Room" />
+          </AssociationSet>
           <AssociationSet Name="FK_User_State" Association="Self.FK_User_State">
             <End Role="State" EntitySet="State" />
             <End Role="User" EntitySet="User" />
@@ -52,6 +139,8 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="ChatPruebaTecnicaDBModel.FK_User_State" FromRole="State" ToRole="User" />
+          <NavigationProperty Name="Rooms" Relationship="ChatPruebaTecnicaDBModel.FK_Room_State" FromRole="State" ToRole="Room" />
+          <NavigationProperty Name="Messages" Relationship="ChatPruebaTecnicaDBModel.FK_Message_State" FromRole="State" ToRole="Message" />
         </EntityType>
         <EntityContainer Name="ChatPruebaTecnicaDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="States" EntityType="Self.State" />
@@ -59,6 +148,24 @@
           <AssociationSet Name="FK_User_State" Association="ChatPruebaTecnicaDBModel.FK_User_State">
             <End Role="State" EntitySet="States" />
             <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="Rooms" EntityType="ChatPruebaTecnicaDBModel.Room" />
+          <AssociationSet Name="FK_Room_State" Association="ChatPruebaTecnicaDBModel.FK_Room_State">
+            <End Role="State" EntitySet="States" />
+            <End Role="Room" EntitySet="Rooms" />
+          </AssociationSet>
+          <EntitySet Name="Messages" EntityType="ChatPruebaTecnicaDBModel.Message" />
+          <AssociationSet Name="FK_Message_Room" Association="ChatPruebaTecnicaDBModel.FK_Message_Room">
+            <End Role="Room" EntitySet="Rooms" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_State" Association="ChatPruebaTecnicaDBModel.FK_Message_State">
+            <End Role="State" EntitySet="States" />
+            <End Role="Message" EntitySet="Messages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Message_User" Association="ChatPruebaTecnicaDBModel.FK_Message_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Message" EntitySet="Messages" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
@@ -70,6 +177,7 @@
           <Property Name="date_created" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="idState" Type="Int32" />
           <NavigationProperty Name="State" Relationship="ChatPruebaTecnicaDBModel.FK_User_State" FromRole="User" ToRole="State" />
+          <NavigationProperty Name="Messages" Relationship="ChatPruebaTecnicaDBModel.FK_Message_User" FromRole="User" ToRole="Message" />
         </EntityType>
         <Association Name="FK_User_State">
           <End Type="ChatPruebaTecnicaDBModel.State" Role="State" Multiplicity="0..1" />
@@ -80,6 +188,80 @@
             </Principal>
             <Dependent Role="User">
               <PropertyRef Name="idState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idState" Type="Int32" Nullable="false" />
+          <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="State" Relationship="ChatPruebaTecnicaDBModel.FK_Room_State" FromRole="Room" ToRole="State" />
+          <NavigationProperty Name="Messages" Relationship="ChatPruebaTecnicaDBModel.FK_Message_Room" FromRole="Room" ToRole="Message" />
+        </EntityType>
+        <Association Name="FK_Room_State">
+          <End Type="ChatPruebaTecnicaDBModel.State" Role="State" Multiplicity="1" />
+          <End Type="ChatPruebaTecnicaDBModel.Room" Role="Room" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Room">
+              <PropertyRef Name="idState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Message">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="idRoom" Type="Int32" Nullable="false" />
+          <Property Name="idUser" Type="Int32" Nullable="false" />
+          <Property Name="text" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="idState" Type="Int32" Nullable="false" />
+          <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Room" Relationship="ChatPruebaTecnicaDBModel.FK_Message_Room" FromRole="Message" ToRole="Room" />
+          <NavigationProperty Name="State" Relationship="ChatPruebaTecnicaDBModel.FK_Message_State" FromRole="Message" ToRole="State" />
+          <NavigationProperty Name="User" Relationship="ChatPruebaTecnicaDBModel.FK_Message_User" FromRole="Message" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Message_Room">
+          <End Type="ChatPruebaTecnicaDBModel.Room" Role="Room" Multiplicity="1" />
+          <End Type="ChatPruebaTecnicaDBModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Room">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idRoom" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_State">
+          <End Type="ChatPruebaTecnicaDBModel.State" Role="State" Multiplicity="1" />
+          <End Type="ChatPruebaTecnicaDBModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="State">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idState" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Message_User">
+          <End Type="ChatPruebaTecnicaDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="ChatPruebaTecnicaDBModel.Message" Role="Message" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Message">
+              <PropertyRef Name="idUser" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -103,6 +285,29 @@
                 <ScalarProperty Name="idState" ColumnName="idState" />
                 <ScalarProperty Name="date_created" ColumnName="date_created" />
                 <ScalarProperty Name="nickName" ColumnName="nickName" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="ChatPruebaTecnicaDBModel.Room">
+              <MappingFragment StoreEntitySet="Room">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="idState" ColumnName="idState" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Messages">
+            <EntityTypeMapping TypeName="ChatPruebaTecnicaDBModel.Message">
+              <MappingFragment StoreEntitySet="Message">
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="idState" ColumnName="idState" />
+                <ScalarProperty Name="text" ColumnName="text" />
+                <ScalarProperty Name="idUser" ColumnName="idUser" />
+                <ScalarProperty Name="idRoom" ColumnName="idRoom" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

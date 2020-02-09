@@ -187,8 +187,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="CounterHub.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -208,14 +209,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DB.edmx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Entities\Reply.cs" />
+    <Compile Include="Models\Message.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Requests\User.cs" />
+    <Compile Include="Models\Room.cs">
+      <DependentUpon>DB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\State.cs">
       <DependentUpon>DB.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>DB.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Requests\Room.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -325,6 +332,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UtilitiesChatPruebaTecnica\UtilitiesChatPruebaTecnica.csproj">
+      <Project>{AE8EF088-9E27-4DA0-A36E-6F874394F5F3}</Project>
+      <Name>UtilitiesChatPruebaTecnica</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

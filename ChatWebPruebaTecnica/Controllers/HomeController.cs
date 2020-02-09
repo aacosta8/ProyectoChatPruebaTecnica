@@ -4,6 +4,7 @@
     using Business;
     using Models.Requests;
     using Models.ViewModels;
+    using Newtonsoft.Json;
     using UtilitiesChatPruebaTecnica.Models;
     using UtilitiesChatPruebaTecnica.Tools;
 
@@ -31,10 +32,12 @@
             RequestUtil request = new RequestUtil();
 
             Reply response = request.Execute<User>(AppSettings.Url.REGISTER, "post", user);
+            var userResponse = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(response.Data));
 
             if (response.Result == 1)
             {
-                Session["NickName"] = user.NickName;
+                Session["User"] = userResponse;
+
                 return RedirectToAction("Index", "Lobby");
             }
 

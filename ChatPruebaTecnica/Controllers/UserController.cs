@@ -6,8 +6,8 @@ namespace ChatPruebaTecnica.Controllers
     using System.Collections.Generic;
     using System.Linq;
     using Models;
-    using Models.Entities;
     using Models.ViewModels;
+    using UtilitiesChatPruebaTecnica.Models;
 
     public class UserController : ApiController
     {
@@ -47,6 +47,11 @@ namespace ChatPruebaTecnica.Controllers
 
                     db.Users.Add(modelUser);
                     reply.Result = db.SaveChanges();
+                    reply.Data = new UserViewModel
+                    {
+                        Id = modelUser.id,
+                        NickName = modelUser.nickName
+                    };
                 }
             }
             catch (Exception e)
