@@ -38,20 +38,29 @@ namespace ChatPruebaTecnica.Controllers
             {
                 using (ChatPruebaTecnicaDBEntities db = new ChatPruebaTecnicaDBEntities())
                 {
-                    Models.User modelUser = new User
+                    var userExist = db.Users.Any(x => x.nickName == user.NickName && x.idState == 1);
+                    if (!userExist)
                     {
-                        nickName = user.NickName,
-                        date_created = DateTime.Now,
-                        idState = 1
-                    };
+                        Models.User modelUser = new User
+                        {
+                            nickName = user.NickName,
+                            date_created = DateTime.Now,
+                            idState = 1
+                        };
 
-                    db.Users.Add(modelUser);
-                    reply.Result = db.SaveChanges();
-                    reply.Data = new UserViewModel
+                        db.Users.Add(modelUser);
+                        reply.Result = db.SaveChanges();
+                        reply.Data = new UserViewModel
+                        {
+                            Id = modelUser.id,
+                            NickName = modelUser.nickName
+                        };
+                    }
+                    else
                     {
-                        Id = modelUser.id,
-                        NickName = modelUser.nickName
-                    };
+                        reply.Result = 0;
+                        reply.Message = "El nombre de usuario existe y se encuentra activo. Intenta más tarde.";
+                    }
                 }
             }
             catch (Exception e)

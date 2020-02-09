@@ -53,8 +53,8 @@
 
             var Counter = $.connection.counterHub;
 
-            Counter.client.enterUser = function() {
-                alert("Entró alguien al chat.");
+            Counter.client.enterUser = function(counter, message) {
+                alert("Hay " + counter + " persona(s) activa(s). " + message);
             }
 
             Counter.client.sendChat = function (userName, message, date, idUser) {

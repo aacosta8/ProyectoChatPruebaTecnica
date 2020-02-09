@@ -7,10 +7,22 @@
 
     public class CounterHub : Hub
     {
+        private static int amountUsersOnline = 0;
+
         public override Task OnConnected()
         {
-            Clients.All.enterUser();
+            var message = "Ha ingresado un nuevo usuario a la sala.";
+            amountUsersOnline++;
+            Clients.All.enterUser(amountUsersOnline, message);
             return base.OnConnected();
+        }
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            amountUsersOnline--;
+            var message = "Un usuario ha abandonado la sala.";
+            Clients.All.enterUser(amountUsersOnline, message);
+            return base.OnDisconnected(stopCalled);
         }
 
         public void AddGroup(int idRoom)
